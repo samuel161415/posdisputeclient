@@ -1,73 +1,106 @@
 import React,{useState,useEffect} from 'react'
+import { userRequest } from '../../helper/requestMethods';
 
-function Requested_modal({ isOpen, onClose }) {
+function Requested_modal({ isOpen, onClose, data, setRefresh, refresh}) {
 
-  const [comment,setComment]=useState('')
+  const [declinedRemark,setDeclinedRemark]=useState('')
+  const [invalidRemark,setInvalidRemark] = useState('')
+
+  // const isDeclinedButtonDisabled = declinedRemark === '';
+  // const isInvalidButtonDisabled = invalidRemark === '';
+  
 
     if (!isOpen) return null;
     // console.log('isopen',isOpen)
 
-    const handleClose = () => {
-      console.log('closed on first');
+    const handleClose = async(status) => {
+      console.log('clicked');
+      if(status === 'pending'){
+        const res = await userRequest.post('/pending/add',{
+          key : data.key,
+          date : data.date
+        })
+      }
+    else if(status==='declined'){
+      const res = await userRequest.post('/declined/add/requested',{
+        key : data.key,
+        date : data.date,
+        remark : declinedRemark
+      }) 
+    }
+  else{
+      const res = await userRequest.post('/invalid/add/requested',{
+      key : data.key,
+      date : data.date,
+      remark : invalidRemark
+    }) 
+  }
+       setRefresh(!refresh)
        onClose();
     };
+
+    const handleContainerClose = () =>{
+      onClose()
+    }
     
 
-    const handleCommentChange = (e) => {
-        setComment(e.target.value);
+    const handleDeclineRemark = (e) => {
+        setDeclinedRemark(e.target.value);
       };
+    const handleInvalidRemark = (e) => {
+      setInvalidRemark(e.target.value);
+    };
   return (
-    <div className="fixed inset-0  items-center justify-center z-50 bg-black opacity-80 m-20 border-2 flex flex-col">
+    <div className="fixed inset-0  items-center justify-center z-50 bg-black opacity-80 m-20 border-2 flex flex-col"
+      >
     <h1 class='text-center text-white w-full pt-7  text-4xl  '>Requested</h1>
-    <div class='flex m-auto'>
+    <div class='flex flex-col m-auto w-2/3'>
 
       <div class='flex flex-col m-auto '>
-       <p class=' text-white'>KEYS</p>
-       <p class=' text-white'>Date</p>
-       <p class=' text-white'>Branch</p>
-       <p class=' text-white'>Amount</p>
+        <h1 class='text-white text-xl text-center underline m-2'><b>Dispute Information</b></h1>
+        <p class=' text-white'><b>Key : </b>{data.key}</p>
+        <p class=' text-white'><b>Date : </b>{data.date.toString().slice(0,10)}</p>
+        <p class=' text-white'><b>Branch : </b>{data.branch}</p>
+        <p class=' text-white'><b>Amount : </b>{data.amount}</p>
+        <p class=' text-white'><b>Account : </b>{data.account}</p>
+        <p class=' text-white'><b>Pan : </b>{data.pan}</p>
+        <p class=' text-white'><b>Terminal  : </b>{data.terminal}</p>
+        <p class=' text-white'><b>Trxn Date  : </b>{data.trxn_date}</p>
       </div>
 
-      <div class='flex flex-col'>
-        <h2 class='text-white text-center'>Actions</h2>
-        <div class='flex    px-4 py-2 justify-end'>
-        {/* <textarea
-              id="comment1"
-              class='border-2 m-4 w-4/5 rounded'
-              value={comment}
-              onChange={handleCommentChange}
-              placeholder='remark'
-              rows={4}>
-        </textarea> */}
-         <button class='p-2 bg-blue-500 rounded' onClick={handleClose}>Pending</button>
-
+      <div class='flex flex-col '>
+        <h2 class='text-white text-center text-xl underline mt-4 '><b>Actions</b></h2>
+        <div class=' p-2 ml-4 flex '>
+         <button class=' px-4 py-2 bg-blue-500 rounded ' onClick={()=>handleClose('pending')} >Pending</button>
+         <button class='mx-4 px-4 py-2  bg-blue-500 rounded' onClick={handleContainerClose}>Close</button>
         </div>
 
-        <div class='flex  p-4 '>
+        <div class='flex  p-2 '>
         <textarea
               id="comment2"
               class='border-2 m-4 w-4/5 rounded'
-              value={comment}
-              onChange={handleCommentChange}
+              value={declinedRemark}
+              onChange={handleDeclineRemark}
               placeholder='Declined remark'
               rows={4}>
         </textarea>
-         <button class='h-2/5 m-auto p-2 bg-blue-500 rounded' onClick={handleClose}>Declined</button>
+         <button class={`h-2/5 m-auto p-2 rounded  bg-blue-500 rounded' `} disabled = {declinedRemark === ''}   onClick={()=>handleClose('declined')}>Declined</button>
 
         </div>
 
-        <div class='flex  p-4 '>
+        <div class='flex  p-2 '>
         <textarea
               id="comment3"
               class='border-2 m-4 w-4/5 rounded'
-              // value={comment}
-              onChange={handleCommentChange}
+              value={invalidRemark}
+              onChange={handleInvalidRemark}
               placeholder='Invalid remark'
               rows={4}>
         </textarea>
-         <button class='h-2/5 m-auto p-2 bg-blue-500 rounded' onClick={handleClose}>Invalid</button>
+         <button class='h-2/5 m-auto p-2 bg-blue-500 rounded' disabled={invalidRemark===''} onClick={()=>handleClose('invalid')}>Invalid</button>
 
         </div>
+        <button>Close</button>
 
       </div>
     </div>

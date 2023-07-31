@@ -1,0 +1,1 @@
+export const branchs = ['Arteam','shiromeda','megenagna','6kilo','4kilo','merkato','jimma','hawassa','tuludimtu']
