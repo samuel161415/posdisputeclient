@@ -5,23 +5,18 @@ import { Link, Navigate } from 'react-router-dom';
 import Requested_modal from './modals/Requested_modal';
 import { userRequest } from '../helper/requestMethods';
 import ExportToExcel from '../helper/ExportToExcel';
-import Links from '../components/Links';
-import Select from '../components/Select';
 
-function Requested() {
+function Special({title,data}) {
 
      const context=useContext(DisputeContext)
-     const [data,setData] = useState([])
      const [selectedData,setSelectedData] = useState({})
      const [refresh,setRefresh] = useState(false)
      const [filtered,setFiltered] = useState([])
      const [searchQeury,setSearchQeury] = useState('')
-     const [terminal_filter, setTerminal_Filter] = useState('')
 
 
      const [isModalOpen, setIsModalOpen] = useState(false);
      const {login,setLogin}=context
-    //  console.log('requested login',login);
 
      console.log('current username',context.currentUser);
      console.log('current branch',context.currentBranch);
@@ -34,19 +29,8 @@ function Requested() {
             try {
       
               const res = context.currentBranch==='AR_TEAM' ? await userRequest.get('/requested/get'): await userRequest.get(`/requested/get/${context.currentBranch}`) ;
-              const keys = []
-              console.log('combined data before',res.data);
-              res.data.map(item =>(
-                keys.push(item.key)
-              ))
-              console.log('combined data before',keys);
-
-              const res_combine = await userRequest.post('/combine',{keys})
-              console.log('combined data ',res_combine.data);
-
-              setData(res_combine.data)
-
-              setFiltered(res_combine.data)
+              setData(res.data)
+              setFiltered(res.data)
             }
             catch (err) {
               console.log('error',err);
@@ -57,7 +41,7 @@ function Requested() {
 
 
      useEffect(()=>{
-
+      console.log('current user',context.currentBranch);
       const filtered = data.filter(item =>
            {
             console.log('item',item);
@@ -66,36 +50,6 @@ function Requested() {
       setFiltered(filtered)
 
   },[searchQeury])
-
-  // const FilteredOld = (val) =>{
-  //   setTerminal_Filter(val)
-  //   let filtered = []
-
-  //   if (val === 'All'){
-  //     filtered = data
-  //   }
-  //   else if(val === 'Date'){
-
-  //     filtered = data.filter(item =>{
-  //       const today = new Date();
-  //       const targetDate = new Date(item.date);
-
-  //       // Calculate the time difference in milliseconds
-  //       const timeDifference = today - targetDate;
-  //       const dayDifference = Math.ceil(timeDifference / (24 * 60 * 60 * 1000));
-  //       console.log('dayDifference',dayDifference);
-  //       return dayDifference > 8
-  //   })}
-
-  //   else 
-  //       filtered = data.filter(item => {
-  //       return item.terminal == val
-  //   })
-       
-
-  //     setFiltered(filtered)
-  // }
-
 
      
      const openModal = async(key) => {
@@ -107,28 +61,20 @@ function Requested() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
-
   return (
-    <div class='overflow-y-scroll w-4/5 p-2 shadow-md '>
+    <div class='overflow-y-scroll w-4/5 p-4 shadow-md'>
        {login?(<>
-        <div class = 'flex justify-between'>
-            <h1 class = 'p-2 font-bold'>{context.currentBranch}</h1>
-            <div class = 'flex justify-end mb-3'>
-                <ExportToExcel tableData={data} filename={'Requested'}/>
-                {/* <button class = 'border-2 rounded mb-2 p-2 bg-green-500 hover:bg-blue-500 border-gray-300 mr-2' onClick={FilteredOld}>Filtered Oldest</button> */}
-                <Select data={data} setFiltered={setFiltered} />
-                <input type='text' class= 'mb-2 p-2 border-gray-300 rounded focus:ring focus:ring-blue-200 focus:border-blue-500 drop-shadow-sm border-2' onChange={(e)=>setSearchQeury(e.target.value)} placeholder='search by key'></input>
-            </div>
+        <div class = 'flex justify-end'>
+          <ExportToExcel tableData={data} filename={'Requested'}/>
+          <input type='text' class= 'mb-2 p-2 border-gray-300 rounded focus:ring focus:ring-blue-200 focus:border-blue-500 drop-shadow-sm border-2' onChange={(e)=>setSearchQeury(e.target.value)} placeholder='search by key'></input>
         </div>
-        {/* <div class='flex flex-row justify-evenly mb-2 border-b-2'>
-            <Link to={'/'} ><button class='p-2 rounded-t border-x-3 border-t-2 shadow  hover:bg-blue-500 '>Requested</button></Link>
-            <Link to={'/pending'} class ="hover:bg-blue-500"><button onClick={(e)=>{context.setColor(2)}} >Pending</button></Link>
-            <Link to={'/completed'} class ="hover:bg-blue-500" onClick={(e)=>{context.setColor(3)}}><button >Completed</button></Link>
-            <Link to={'/declined'} class ="hover:bg-blue-500"><button onClick={(e)=>{context.setColor(4)}}>Declined</button></Link>
-            <Link to={'/invalid'} class ="hover:bg-blue-500"><button onClick={(e)=>{context.setColor(5)}} >Invalid</button></Link>
-            </div> */}
-            <Links />
+        <div class='flex flex-row justify-evenly mb-2 border-b-2'>
+            <Link to={'/'}><button class='p-2 rounded-t border-x-2 border-t-2 shadow-md'>Requested</button></Link>
+            <Link to={'/pending'}><button onClick={(e)=>{context.setColor(2)}} >Pending</button></Link>
+            <Link to={'/completed'} onClick={(e)=>{context.setColor(3)}}><button >Completed</button></Link>
+            <Link to={'/declined'}><button onClick={(e)=>{context.setColor(4)}}>Declined</button></Link>
+            <Link to={'/invalid'}><button onClick={(e)=>{context.setColor(5)}} >Invalid</button></Link>
+            </div>
         <table class="border-collapse border border-slate-500  w-full ">
         <thead class ='shadow bg-blue-200'>
             <tr>
@@ -155,7 +101,7 @@ function Requested() {
                     <tr>
                     <td class="border border-slate-700 p-1">{formattedDate}</td>
                     <td class="border border-slate-700 ">{item.key}</td>
-                    <td class="border border-slate-700 ">{item.branch}</td>
+                    <td class="border border-slate-700 ">{context.currentBranch}</td>
                     <td class="border border-slate-700 ">
                         <button className="bg-blue-500 hover:bg-blue-600 text-white px-2 rounded"
                         onClick={()=>{openModal(item.key)}}
@@ -178,4 +124,4 @@ function Requested() {
   )
 }
 
-export default Requested
+export default Specila

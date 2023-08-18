@@ -1,2 +1,2 @@
 import { createContext } from "react";
-export const DisputeContext=createContext()
+export const DisputeContext = createContext()

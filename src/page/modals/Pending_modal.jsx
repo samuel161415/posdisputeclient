@@ -51,13 +51,56 @@ function Pending_modal({ isOpen, onClose, data, refresh, setRefresh }) {
       setInvalidRemark(e.target.value);
     };
   return (
-    <div className="fixed inset-0  items-center justify-center z-50 bg-black opacity-80 m-20 border-2 flex flex-col p-4"
+    <div className="fixed inset-0  items-center justify-center z-50 bg-black opacity-90 m-20 border-2 flex flex-col p-4 h-full"
       >
     <h1 class='text-center text-white w-full pt-7  text-4xl  '>Pending</h1>
     <div class='flex flex-col m-auto w-2/3'>
 
       <div class='flex flex-col m-auto '>
-        <h1 class='text-white text-xl text-center underline m-2'><b>Dispute Information</b></h1>
+      <table class="border-collapse border border-slate-500  w-full ">
+        <thead class = 'shodow bg-green-600  '>
+            <th class="border border-slate-600 p-3 text-white">Information </th>
+           <th class="border border-slate-600 text-white">Value</th>
+        </thead>
+         
+        <tbody>
+         <tr >
+           <td class="border border-slate-600 p-3 text-white">KEY</td>
+           <td class="border border-slate-600 text-white p-3">{data.key}</td>   
+        </tr>
+
+        <tr >
+          <td class="border border-slate-600 p-3 text-white  ">Date of registration</td>
+          <td class="border border-slate-600 text-white ">{data.date.toString().slice(0,10)}</td>
+        </tr>
+        <tr >
+          <td class="border border-slate-600 text-white p-3 ">Branch</td>
+          <td class="border border-slate-600 text-white">{data.branch}</td>
+        </tr>
+        <tr >
+          <td class="border border-slate-600  text-white  p-3">Amount</td>
+          <td class="border border-slate-600 text-white p-3">{data.amount}</td>
+        </tr>
+        <tr >
+          <td class="border border-slate-600  text-white  p-3">Account</td>
+          <td class="border border-slate-600 text-white p-3">{data.account}</td>
+        </tr>
+        <tr >
+          <td class="border border-slate-600  text-white  p-3">pan</td>
+          <td class="border border-slate-600 text-white p-3">{data.pan}</td>
+        </tr>
+        <tr >
+          <td class="border border-slate-600  text-white p-3">Terminal</td>
+          <td class="border border-slate-600 text-white p-3">{data.terminal}</td>
+        </tr>
+        <tr >
+          <td class="border border-slate-600  text-white  p-3">Transaction date</td>
+          <td class="border border-slate-600 text-white p-3">{data.trxn_date.toString().slice(0,10)}</td>
+        </tr>
+
+        </tbody>
+       </ table >
+        {/* <h1 class='text-white text-xl text-center underline m-2'><b>Dispute Information</b></h1>
         <p class=' text-white'><b>Key : </b>{data.key}</p>
         <p class=' text-white'><b>Date : </b>{data.date.toString().slice(0,10)}</p>
         <p class=' text-white'><b>Branch : </b>{data.branch}</p>
@@ -65,7 +108,7 @@ function Pending_modal({ isOpen, onClose, data, refresh, setRefresh }) {
         <p class=' text-white'><b>Account : </b>{data.account}</p>
         <p class=' text-white'><b>Pan : </b>{data.pan}</p>
         <p class=' text-white'><b>Terminal  : </b>{data.terminal}</p>
-        <p class=' text-white'><b>Trxn Date  : </b>{data.trxn_date}</p>
+        <p class=' text-white'><b>Trxn Date  : </b>{data.trxn_date}</p> */}
         
       </div>
 

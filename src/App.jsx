@@ -1,7 +1,7 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import {BrowserRouter as Router, Route,Routes,Navigate} from 'react-router-dom'
-import React, { useContext, useState,createContext,useEffect  } from 'react';
+import React, { useContext, useState, useEffect  } from 'react';
 
 // routes
 import Left from "./components/Left";
@@ -15,11 +15,14 @@ import User from "./page/User";
 import Login from "./page/Login";
 import Branch_input from "./page/Branch_input";
 import Signup from "./page/Signup";
+import Add_user from "./page/Add_user";
+import Update_user from "./page/Update_user";
+
 
 function App() {  
 
   
-  
+  // states
   const [path,setPath]=useState('/')
   const [color,setColor]=useState(1)
   const [login,setLogin]=useState(false)
@@ -28,19 +31,22 @@ function App() {
   const [currentBranch,setCurrentBranch] = useState('')
   const [currentUser,setCurrentUser] = useState('')
 
+
+
   useEffect(() => {
     
     const storedLoginStatus = localStorage.getItem('login');
     setLogin(storedLoginStatus==='true');
 
-    const storedUser = localStorage.getItem('currentBranch')
-    const storedBranch = localStorage.getItem('currentUser')
+    const storedBranch = localStorage.getItem('currentBranch')
+    const storedUser = localStorage.getItem('currentUser')
 
     setCurrentBranch(storedBranch)
     setCurrentUser(storedUser)
     
     console.log('localstorage data',storedLoginStatus);
   }, []);
+
 
 
 console.log('updated local storage data',login);
@@ -63,7 +69,9 @@ console.log('updated local storage data',login);
               <Route exact path='/user' element={<User />} />
               <Route exact path="/login" element={<Login />}  />
               <Route exact path='/input' element={<Branch_input />} />
-              <Route exact path='/register' element={<Signup />} />
+              {/* <Route exact path='/register' element={<Signup />} /> */}
+              <Route exact path='/add' element={<Add_user />} />
+              <Route exact path='/update' element={<Update_user />} />
             </Routes>
             </div>
           </Router>

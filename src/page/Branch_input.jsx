@@ -44,7 +44,7 @@ const Branch_input = () => {
         branch,amount,account,pan,terminal,trxn_date
       })
 
-      alert('User is created successfully')
+      alert('Dispute is created successfully')
       setAccount('')
       setBranch('')
       setAmount('')

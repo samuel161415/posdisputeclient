@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate=useNavigate()
 
-  console.log('login update',context.login,' path',context.path);
+  // console.log('login update',context.login,' path',context.path);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ function Login() {
       const response = await userRequest.post('/login',{username,password});
       
 
-      console.log('login result ',response.status);
+      // console.log('login result ',response.status);
 
       if (response.status == 200) {
   
@@ -56,7 +56,7 @@ function Login() {
               type="text"
               id="username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value.toLowerCase())}
               class='rounded p-2 m-2'
             />
           </div>
@@ -76,7 +76,7 @@ function Login() {
         </div>
         
       </form>
-      <Link to='/register'><p class='text-center text-blue-600 px-2 shadow-md'>If no account, register</p></Link>
+      {/* <Link to='/register'><p class='text-center text-blue-600 px-2 shadow-md'>If no account, register</p></Link> */}
       </div>
      </div>:<Navigate to={`${context.path}`} />}
       
